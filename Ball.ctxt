@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Ball()
+comment1.params=xP\ yP
+comment1.target=Ball(int,\ int)
+numComments=2
