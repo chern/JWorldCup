@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=
-comment0.target=SoccerGame()
+comment0.params=w\ h
+comment0.target=SoccerGame(int,\ int)
 comment1.params=g
 comment1.target=void\ paintComponent(java.awt.Graphics)
 numComments=2
