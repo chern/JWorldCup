@@ -1,6 +1,10 @@
 #BlueJ class context
-comment0.params=w\ h
-comment0.target=SoccerGame(int,\ int)
+comment0.params=w\ h\ l
+comment0.target=SoccerGame(int,\ int,\ boolean)
 comment1.params=g
 comment1.target=void\ paintComponent(java.awt.Graphics)
-numComments=2
+comment2.params=
+comment2.target=void\ readFile()
+comment3.params=
+comment3.target=void\ saveFile()
+numComments=4
