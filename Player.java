@@ -60,23 +60,32 @@ public class Player extends JComponent {
     }
 
     // mutator for method for choosing new direction and speed
-    public void randVector() {
+    public Player randVector() {
         // chose random vector magnitude
-        this.xVec = (int) (Math.random() * 10 - 5);
-        this.yVec = (int) (Math.random() * 10 - 5);
+        this.xVec = (int) (Math.random() * 6 - 3);
+        this.yVec = (int) (Math.random() * 6 - 3);
+        
+        // chain
+        return this;
     }
     
-    public void move() {
+    public Player move() {
         this.movePlayer();
+        
+        // chain
+        return this;
     }
     
     // mutator method for moving player
-    public void movePlayer() {
+    public Player movePlayer() {
         // boundary colliders
         if (this.xPos > 480 || this.xPos < 0) this.xVec *= -1;
         if (this.yPos > 450 || this.yPos < 0) this.yVec *= -1;
         // move coordinates by vector
         this.xPos += this.xVec;
         this.yPos += this.yVec;
+        
+        // chain
+        return this;
     }
 }

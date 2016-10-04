@@ -1,12 +1,16 @@
 #BlueJ class context
 comment0.params=title\ w\ h\ l
 comment0.target=SoccerGame(java.lang.String,\ int,\ int,\ boolean)
-comment1.params=e
-comment1.target=void\ actionPerformed(java.awt.event.ActionEvent)
-comment2.params=g
-comment2.target=void\ paintComponent(java.awt.Graphics)
-comment3.params=
-comment3.target=void\ readFile()
-comment4.params=
-comment4.target=void\ saveFile()
-numComments=5
+comment1.params=g
+comment1.target=void\ paintComponent(java.awt.Graphics)
+comment2.params=
+comment2.target=SoccerGame\ addPlayer()
+comment3.params=e
+comment3.target=void\ actionPerformed(java.awt.event.ActionEvent)
+comment4.params=e
+comment4.target=void\ actionPerformed(java.awt.event.ActionEvent)
+comment5.params=
+comment5.target=void\ readFile()
+comment6.params=
+comment6.target=void\ saveFile()
+numComments=7

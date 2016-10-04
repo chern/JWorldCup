@@ -33,24 +33,9 @@ public class SoccerGame extends JComponent {
         this.height = h;
         this.light = l;
 
-        // add test player to frame
-        Player p = new Player(50, 50);
-        this.frame.add(p);
-        frame.setVisible(true);
-
         // add field to frame
         frame.add(this);
         frame.setVisible(true);
-
-        SoccerGame sg = this;
-        p.randVector();
-        Timer t = new Timer(40, new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        p.move();
-                        p.repaint();
-                    }
-                });
-        t.start();
     }
 
     protected void paintComponent(Graphics g) {
@@ -97,6 +82,38 @@ public class SoccerGame extends JComponent {
         }
     }
 
+    public SoccerGame addPlayer() {
+        // remove background
+        this.frame.remove(this);
+        
+        // add player to frame
+        Player p = new Player(50, 50);
+        this.frame.add(p);
+        this.frame.setVisible(true);
+        
+        p.randVector();
+        Timer t1 = new Timer(10, new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        p.move();
+                        p.repaint();
+                    }
+                });
+        t1.start();
+        
+        Timer t2 = new Timer((int) (Math.random() * 2000 + 800), new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        p.randVector();
+                    }
+                });
+        t2.start();
+        
+        // re-add background
+        this.frame.add(this);
+        this.frame.setVisible(true);
+        
+        return this;
+    }
+    
     public void readFile() {
 
     }
