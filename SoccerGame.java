@@ -9,7 +9,7 @@ import java.awt.BasicStroke;
 import javax.swing.Timer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+import java.util.ArrayList;
 // class SoccerGame
 public class SoccerGame extends JComponent {
     // instance fields
@@ -19,6 +19,7 @@ public class SoccerGame extends JComponent {
     public final Color darkGreen = new Color(20, 170, 20);
     public final Color lightGreen = new Color(40, 190, 40);
     private boolean light;
+    private ArrayList<Player> playerList;
     // constructor
     public SoccerGame(String title, int w, int h, boolean l) {
         // initialize frame
@@ -32,7 +33,7 @@ public class SoccerGame extends JComponent {
         this.width = w;
         this.height = h;
         this.light = l;
-
+        this.playerList = new ArrayList<Player>();
         // add field to frame
         frame.add(this);
         frame.setVisible(true);
@@ -89,6 +90,7 @@ public class SoccerGame extends JComponent {
         // add player to frame
         Player p = new Player(50, 50);
         this.frame.add(p);
+        playerList.add(p);
         this.frame.setVisible(true);
         
         p.randVector();
@@ -110,7 +112,7 @@ public class SoccerGame extends JComponent {
         // re-add background
         this.frame.add(this);
         this.frame.setVisible(true);
-        
+        System.out.println(playerList.size());
         return this;
     }
     
