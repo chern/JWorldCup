@@ -117,10 +117,12 @@ public class SoccerGame extends JComponent {
     }
     
     public void readFile() {
-
+        
     }
 
     public void saveFile() {
-
+        for(Player p : playerList) {
+            
+        }
     }
 }
