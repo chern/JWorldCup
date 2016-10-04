@@ -2,36 +2,69 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.JComponent;
 import java.awt.Stroke;
 import java.awt.BasicStroke;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 // class SoccerGame
-public class SoccerGame extends JPanel {
-    public int width;
-    public int height;
+public class SoccerGame extends JComponent {
+    // instance fields
+    private JFrame frame;
+    private int width;
+    private int height;
     public final Color darkGreen = new Color(20, 170, 20);
     public final Color lightGreen = new Color(40, 190, 40);
-    public boolean light;
-    public SoccerGame(int w, int h, boolean l) {
+    private boolean light;
+    // constructor
+    public SoccerGame(String title, int w, int h, boolean l) {
+        // initialize frame
+        this.frame = new JFrame(title);
+        this.frame.setSize(w, h + 20);
+        this.frame.setBackground(this.darkGreen);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setResizable(false);
+
+        // initialize instance fields
         this.width = w;
         this.height = h;
         this.light = l;
-        this.setBackground(darkGreen);
+
+        // add test player to frame
+        Player p = new Player(50, 50);
+        this.frame.add(p);
+        frame.setVisible(true);
+
+        // add field to frame
+        frame.add(this);
+        frame.setVisible(true);
+
+        SoccerGame sg = this;
+        p.randVector();
+        Timer t = new Timer(40, new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        p.move();
+                        p.repaint();
+                    }
+                });
+        t.start();
     }
 
     protected void paintComponent(Graphics g) {
-        //*The Following is the drawing of the field*
-        //  background
-        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        //  field grass
+        //  draw field grass
         final int rects = 5;
+        boolean temp = light;
         for (int i = 0; i < rects; i++) {
             if (light) g.setColor(this.lightGreen);
             else g.setColor(this.darkGreen);
             g.fillRect(0, i * this.height/rects, this.width, this.height/rects);
             light = !light;
         }
+        light = temp;
         // draw goal frame
         g2.setColor(Color.WHITE);
         Stroke stroke = g2.getStroke();
@@ -62,11 +95,13 @@ public class SoccerGame extends JPanel {
             int y2 = goalY + i * goalHeight/lines;
             g2.drawLine(x1, y1, x2, y2);
         }
-        //*drawing of field finished
     }
-    
+
     public void readFile() {
+
     }
+
     public void saveFile() {
+
     }
 }
