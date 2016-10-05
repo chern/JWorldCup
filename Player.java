@@ -1,10 +1,11 @@
 // import classes
 import javax.swing.JComponent;
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
-import java.awt.Color;
-import java.awt.Dimension;
 
 // class Player represents a soccer player
 public class Player extends JComponent {
@@ -32,11 +33,11 @@ public class Player extends JComponent {
     }
     // private mutator convenience method for setting instance fields
     private void construct(int xP, int yP, Color hc, Color jc, String t) {
-        // choose random head and jersey colors if not already chosen
+        // choose random head and jersey colors if not provided
         if (hc == null)
             hc = new Color((int) (Math.random() * 75 + 175), (int) (Math.random() * 65 + 145), (int) (Math.random() * 55 + 135));
         if (jc == null)
-            jc = new Color((int) (Math.random() * 210 + 30), (int) (Math.random() * 210 + 10), (int) (Math.random() * 210 + 20));
+            jc = new Color((int) (Math.random() * 210 + 45), (int) (Math.random() * 210 + 30), (int) (Math.random() * 210 + 40));
         this.xPos = xP;
         this.yPos = yP;
         this.xVec = 0;
@@ -48,9 +49,8 @@ public class Player extends JComponent {
         this.setBackground(null);
     }
 
-    // overridden paintComponent method for player
+    // overridden paintComponent method for JComponent
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         Ellipse2D.Double head = new Ellipse2D.Double(this.xPos, this.yPos, 18, 18);
         g2.setColor(this.jerseyColor);
@@ -59,33 +59,56 @@ public class Player extends JComponent {
         g2.fill(head);
     }
 
-    // mutator for method for choosing new direction and speed
+    // (chainable) mutator for method for generating new random direction and speed
     public Player randVector() {
-        // chose random vector magnitude
+        // generate new random vector magnitudes
         this.xVec = (int) (Math.random() * 6 - 3);
         this.yVec = (int) (Math.random() * 6 - 3);
-        
         // chain
         return this;
     }
     
+    // (chainable) overloaded method for moving JComponent
     public Player move() {
+        // call normal move player method
         this.movePlayer();
-        
         // chain
         return this;
     }
     
-    // mutator method for moving player
+    // (chainable) mutator method for moving player
     public Player movePlayer() {
         // boundary colliders
-        if (this.xPos > 480 || this.xPos < 0) this.xVec *= -1;
-        if (this.yPos > 450 || this.yPos < 0) this.yVec *= -1;
+        if (this.xPos >= 480) {
+            this.xVec *= -1;
+            this.xPos = 479;
+        } else if (this.xPos <= 0) {
+            this.xVec *= -1;
+            this.xPos = 1;
+        }
+        if (this.yPos >= 460) {
+            this.yVec *= -1;
+            this.yPos = 459;
+        } else if (this.yPos <= 0) {
+            this.yVec *= -1;
+            this.yPos = 1;
+        }
+        
         // move coordinates by vector
         this.xPos += this.xVec;
         this.yPos += this.yVec;
         
         // chain
         return this;
+    }
+    
+    // accessor method for rectangle representing the bounds of the player
+    public Rectangle getCollider() {
+        return new Rectangle(this.xPos, this.yPos, 18, 32);
+    }
+    
+    // accessor method for array containing player vector
+    public int[] getVector() {
+        return new int[] {this.xVec, this.yVec};
     }
 }
