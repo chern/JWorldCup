@@ -25,9 +25,11 @@ public class Player extends JComponent {
     public Player(int xP, int yP) {
         this.construct(xP, yP, null, null, "player");
     }
+
     public Player(int xP, int yP, Color jc) {
         this.construct(0, 0, jc, null, "player");
     }
+
     public Player(int xP, int yP, Color hc, Color jc, String t) {
         this.construct(0, 0, hc, jc, t);
     }
@@ -67,7 +69,7 @@ public class Player extends JComponent {
         // chain
         return this;
     }
-    
+
     // (chainable) overloaded method for moving JComponent
     public Player move() {
         // call normal move player method
@@ -75,7 +77,7 @@ public class Player extends JComponent {
         // chain
         return this;
     }
-    
+
     // (chainable) mutator method for moving player
     public Player movePlayer() {
         // boundary colliders
@@ -93,20 +95,20 @@ public class Player extends JComponent {
             this.yVec *= -1;
             this.yPos = 1;
         }
-        
+
         // move coordinates by vector
         this.xPos += this.xVec;
         this.yPos += this.yVec;
-        
+
         // chain
         return this;
     }
-    
+
     // accessor method for rectangle representing the bounds of the player
     public Rectangle getCollider() {
         return new Rectangle(this.xPos, this.yPos, 18, 32);
     }
-    
+
     // accessor method for array containing player vector
     public int[] getVector() {
         return new int[] {this.xVec, this.yVec};

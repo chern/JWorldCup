@@ -79,7 +79,7 @@ public class Game extends JComponent {
                             sg.score++;
                             System.out.println("P" + (sg.lastPlayer + 1) + ": SCORE!");
                             sg.pause();
-                            WorldCup.setTimeout(2000, new Runnable() {
+                            WorldCup.setTimeout(1000, new Runnable() {
                                     public void run() {
                                         sg.play();
                                         b.setPosition(new int[] {250, 250}).randVector();
@@ -208,6 +208,13 @@ public class Game extends JComponent {
     // (chainable) mutator method for pausing (stopping or freezing) game
     public Game pause() {
         this.play = false;
+        // chain
+        return this;
+    }
+    
+    // (chainable) mutator method for game speed instance field
+    public Game pause(int s) {
+        this.speed = s;
         // chain
         return this;
     }

@@ -44,8 +44,8 @@ public class Ball extends JComponent {
     // (chainable) mutator for method for generating random new direction and speed
     public Ball randVector() {
         // generate new random vector magnitudes
-        this.xVec = (int) (Math.random() * 6 - 3);
-        this.yVec = (int) (Math.random() * 6 - 3);
+        this.xVec = (int) (Math.random() * 8 - 4);
+        this.yVec = (int) (Math.random() * 8 - 4);
         // chain
         return this;
     }
