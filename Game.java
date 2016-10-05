@@ -11,7 +11,8 @@ import java.awt.BasicStroke;
 import javax.swing.JComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.FileWriter;
+import java.io.IOException;
 // class Game contains the main game logic, but is also the JComponent for drawing a field
 public class Game extends JComponent {
     // instance fields
@@ -26,6 +27,7 @@ public class Game extends JComponent {
     public final Color lightGreen = new Color(40, 190, 40);
     private boolean light;
     private ArrayList<Player> players;
+    Ball b;
     // customizable constructor
     public Game(String title, int w, int h, int sp, boolean l) {
         // initialize frame
@@ -46,7 +48,8 @@ public class Game extends JComponent {
         this.players = new ArrayList<Player>();
 
         // add ball with timer to frame
-        Ball b = (new Ball(250, 250)).randVector();
+        readFile();
+        b = (new Ball(250, 250)).randVector();
         final Timer t = new Timer(sg.speed, null);
         t.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -78,7 +81,9 @@ public class Game extends JComponent {
                         if (sg.getGoalCollider().intersects(ballCollider)) {
                             sg.score++;
                             System.out.println("P" + (sg.lastPlayer + 1) + ": SCORE!");
-                            sg.pause();
+                            try {
+                                sg.pause();
+                            } catch(IOException ioe) {}
                             WorldCup.setTimeout(1000, new Runnable() {
                                     public void run() {
                                         sg.play();
@@ -146,6 +151,9 @@ public class Game extends JComponent {
         }
     }
 
+    public void addBall() {
+        /*Anuv here implement a function that adds the ball*/
+    }
     // (chainable) mutator method for adding new players to the game
     public Game addPlayer() {
         // remove background
@@ -206,15 +214,17 @@ public class Game extends JComponent {
     }
 
     // (chainable) mutator method for pausing (stopping or freezing) game
-    public Game pause() {
+    public Game pause() throws IOException{
         this.play = false;
+        saveFile();
         // chain
         return this;
     }
-    
+
     // (chainable) mutator method for game speed instance field
-    public Game pause(int s) {
+    public Game pause(int s)throws IOException {
         this.speed = s;
+        saveFile();
         // chain
         return this;
     }
@@ -232,9 +242,16 @@ public class Game extends JComponent {
 
     }
 
-    public void saveFile() {
-        for (Player p : players) {
-
+    public void saveFile() throws IOException {
+        FileWriter writer = new FileWriter("playerData.csv");
+        writer.write("");        
+        for (Player p : players) {            
+            int[] positions = p.getPosition();
+            int[] vectors = p.getVector();
+            writer.append("\"Player\"," +"\"" + positions[0] +"\"," +"\"" + positions[1] + "\"," + "\"" + vectors[0] +"\","  +"\"" + vectors[1] +"\"\n");
         }
+        writer.append("\"Score\"," + "\"" + score + "\"\n");
+        writer.append("\"Ball\"," + "\"");
+        writer.close();
     }
 }

@@ -112,4 +112,7 @@ public class Ball extends JComponent {
     public int[] getVector() {
         return new int[] {this.xVec, this.yVec};
     }
+    public int[] getPosition() {
+        return new int[] {this.xPos, this.yPos};
+    }
 }
