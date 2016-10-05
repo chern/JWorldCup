@@ -19,22 +19,25 @@ public class Player extends JComponent {
     private String type; // type of player
     // default constructor
     public Player() {
-        this.construct(0, 0, null, null, "player");
+        this.construct(0, 0, null, null, "player", 0, 0);
     }
     // customizable constructors
     public Player(int xP, int yP) {
-        this.construct(xP, yP, null, null, "player");
+        this.construct(xP, yP, null, null, "player", 0, 0);
     }
 
     public Player(int xP, int yP, Color jc) {
-        this.construct(0, 0, jc, null, "player");
+        this.construct(0, 0, jc, null, "player", 0, 0);
     }
 
     public Player(int xP, int yP, Color hc, Color jc, String t) {
-        this.construct(0, 0, hc, jc, t);
+        this.construct(0, 0, hc, jc, t, 0, 0);
+    }
+    public Player(int xP, int yP, int xV, int yV) {
+        this.construct(xP, yP, null, null, "player", xV, yV);
     }
     // private mutator convenience method for setting instance fields
-    private void construct(int xP, int yP, Color hc, Color jc, String t) {
+    private void construct(int xP, int yP, Color hc, Color jc, String t, int xV, int yV) {
         // choose random head and jersey colors if not provided
         if (hc == null)
             hc = new Color((int) (Math.random() * 75 + 175), (int) (Math.random() * 65 + 145), (int) (Math.random() * 55 + 135));
@@ -42,15 +45,16 @@ public class Player extends JComponent {
             jc = new Color((int) (Math.random() * 210 + 45), (int) (Math.random() * 210 + 30), (int) (Math.random() * 210 + 40));
         this.xPos = xP;
         this.yPos = yP;
-        this.xVec = 0;
-        this.yVec = 0;
+        this.xVec = xV;
+        this.yVec = yV;
         this.type = t;
         this.headColor = hc;
         this.jerseyColor = jc;
         this.setBounds(0, 0, 500, 500);
         this.setBackground(null);
     }
-
+    
+    
     // overridden paintComponent method for JComponent
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -112,5 +116,8 @@ public class Player extends JComponent {
     // accessor method for array containing player vector
     public int[] getVector() {
         return new int[] {this.xVec, this.yVec};
+    }
+    public int[] getPosition() {
+        return new int[] {this.xPos, this.yPos};
     }
 }
