@@ -49,7 +49,6 @@ public class Ball extends JComponent {
         // chain
         return this;
     }
-    
     // (chainable) mutator for method for choosing new direction and speed
     public Ball setVector(int[] v) {
         // set new vector magnitudes
@@ -59,19 +58,18 @@ public class Ball extends JComponent {
         return this;
     }
     
+    // (chainable) overloaded method for moving JComponent
+    public Ball move() {
+        // call normal move ball method
+        this.moveBall();
+        // chain
+        return this;
+    }
     // (chainable) mutator for method for choosing new position
     public Ball setPosition(int[] p) {
         // set new position coordinates
         this.xPos = p[0];
         this.yPos = p[1];
-        // chain
-        return this;
-    }
-    
-    // (chainable) overloaded method for moving JComponent
-    public Ball move() {
-        // call normal move ball method
-        this.moveBall();
         // chain
         return this;
     }
@@ -112,6 +110,7 @@ public class Ball extends JComponent {
     public int[] getVector() {
         return new int[] {this.xVec, this.yVec};
     }
+    // accessor method for array containing ball position
     public int[] getPosition() {
         return new int[] {this.xPos, this.yPos};
     }

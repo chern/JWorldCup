@@ -1,10 +1,11 @@
 // import classes
-import javax.swing.JComponent;
 import java.awt.Color;
 import java.awt.Graphics;
+import javax.swing.Timer;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
+import javax.swing.JComponent;
 import java.awt.geom.Ellipse2D;
 
 // class Player represents a soccer player
@@ -14,6 +15,7 @@ public class Player extends JComponent {
     private int yPos; // vertical position
     private int xVec; // magnitude of horizontal vector
     private int yVec; // magnitude of vertical vector
+    private Timer[] timers;
     private Color headColor; // color of head
     private Color jerseyColor; // color of jersey
     private String type; // type of player
@@ -48,6 +50,7 @@ public class Player extends JComponent {
         this.xVec = xV;
         this.yVec = yV;
         this.type = t;
+        this.timers = new Timer[2];
         this.headColor = hc;
         this.jerseyColor = jc;
         this.setBounds(0, 0, 500, 500);
@@ -73,11 +76,27 @@ public class Player extends JComponent {
         // chain
         return this;
     }
+    // (chainable) mutator for method for setting new direction and speed
+    public Player setVector(int[] v) {
+        // set new vector magnitudes
+        this.xVec = v[0];
+        this.yVec = v[1];
+        // chain
+        return this;
+    }
 
     // (chainable) overloaded method for moving JComponent
     public Player move() {
         // call normal move player method
         this.movePlayer();
+        // chain
+        return this;
+    }
+    // (chainable) mutator for method for setting new position
+    public Player setPosition(int[] p) {
+        // set new coordinates
+        this.xPos = p[0];
+        this.yPos = p[1];
         // chain
         return this;
     }
@@ -107,6 +126,18 @@ public class Player extends JComponent {
         // chain
         return this;
     }
+    
+    // (chainable) mutator method to keep track of player's timers
+    public Player setTimers(Timer t1, Timer t2) {
+        this.timers[0] = t1;
+        this.timers[1] = t2;
+        // chain
+        return this;
+    }
+    // accessor method to keep track of player's timers
+    public Timer[] getTimers() {
+        return this.timers;
+    }
 
     // accessor method for rectangle representing the bounds of the player
     public Rectangle getCollider() {
@@ -117,6 +148,7 @@ public class Player extends JComponent {
     public int[] getVector() {
         return new int[] {this.xVec, this.yVec};
     }
+    // accessor method for array containing player position
     public int[] getPosition() {
         return new int[] {this.xPos, this.yPos};
     }

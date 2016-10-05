@@ -13,12 +13,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
+
 // class Game contains the main game logic, but is also the JComponent for drawing a field
 public class Game extends JComponent {
     // instance fields
     private int score;
     private int speed;
     private boolean play;
+    private Ball ball;
     private int lastPlayer;
     private JFrame frame;
     private int width;
@@ -60,7 +62,7 @@ public class Game extends JComponent {
                         // check collisions
                         Rectangle ballCollider = b.getCollider();
                         // check for player collisions in loop
-                        for (int i = 0; i < players.size(); i++) {
+                        for (int i = 0; i < sg.players.size(); i++) {
                             Player p = players.get(i);
                             if (p.getCollider().intersects(ballCollider)) {
                                 int[] playerVector = p.getVector();
@@ -81,9 +83,7 @@ public class Game extends JComponent {
                         if (sg.getGoalCollider().intersects(ballCollider)) {
                             sg.score++;
                             System.out.println("P" + (sg.lastPlayer + 1) + ": SCORE!");
-                            try {
-                                sg.pause();
-                            } catch(IOException ioe) {}
+                            sg.pause();
                             WorldCup.setTimeout(1000, new Runnable() {
                                     public void run() {
                                         sg.play();
@@ -100,6 +100,7 @@ public class Game extends JComponent {
             });
         t.start();
         frame.add(b);
+        this.ball = b;
 
         // add field to frame
         frame.add(this);
@@ -170,7 +171,7 @@ public class Game extends JComponent {
         p.randVector();
 
         // add timer for moving player
-        final Timer t1 = new Timer(sg.speed, null);
+        Timer t1 = new Timer(sg.speed, null);
         t1.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     if (sg.play) {
@@ -198,6 +199,9 @@ public class Game extends JComponent {
             });
         t2.start();
 
+        // keep track of timers
+        p.setTimers(t1, t2);
+        
         // re-add background
         this.frame.add(this);
         this.frame.setVisible(true);
@@ -214,17 +218,28 @@ public class Game extends JComponent {
     }
 
     // (chainable) mutator method for pausing (stopping or freezing) game
-    public Game pause() throws IOException{
+    public Game pause() {
         this.play = false;
-        saveFile();
         // chain
         return this;
     }
 
     // (chainable) mutator method for game speed instance field
-    public Game pause(int s)throws IOException {
+    public Game setSpeed(int s) {
         this.speed = s;
-        saveFile();
+        // chain
+        return this;
+    }
+    
+    // (chainable) mutator method for clearing players from field
+    public Game clear() {
+        this.pause();
+        for (Player p : this.players) {
+            for (Timer t : p.getTimers()) t.stop();
+            p.setTimers(null, null);
+            this.frame.remove(p);
+        }
+        this.players.clear();
         // chain
         return this;
     }
@@ -239,18 +254,19 @@ public class Game extends JComponent {
     }
 
     public void readFile() {
-
+        // you have access to this.ball so feel free to set or get its position/vector
+        this.ball = this.ball;
     }
 
     public void saveFile() throws IOException {
         FileWriter writer = new FileWriter("playerData.csv");
-        writer.write("");        
-        for (Player p : players) {            
+        writer.write("");
+        for (Player p : this.players) {
             int[] positions = p.getPosition();
             int[] vectors = p.getVector();
             writer.append("\"Player\"," +"\"" + positions[0] +"\"," +"\"" + positions[1] + "\"," + "\"" + vectors[0] +"\","  +"\"" + vectors[1] +"\"\n");
         }
-        writer.append("\"Score\"," + "\"" + score + "\"\n");
+        writer.append("\"Score\"," + "\"" + this.score + "\"\n");
         writer.append("\"Ball\"," + "\"");
         writer.close();
     }
