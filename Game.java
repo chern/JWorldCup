@@ -194,6 +194,14 @@ public class Game extends JComponent {
                     if (sg.play) {
                         // generate new direction/speed for player
                         p.randVector();
+                        
+                        int[] ballPos = sg.ball.getPosition();
+                        int[] playerPos = p.getPosition();
+                        int[] playerVec = p.getVector();
+                        if (ballPos[0] < playerPos[0])
+                            p.setVector(new int[] { Math.abs(playerVec[0]) * -1, playerVec[1] });
+                        if (ballPos[1] < playerPos[1])
+                            p.setVector(new int[] { playerVec[0], Math.abs(playerVec[1]) * -1 });
                     }
                 }
             });

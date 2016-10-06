@@ -9,9 +9,10 @@ public class WorldCup {
     public static Game game;
     // main method creates and interacts with an instance of class SoccerGame
     public static void main(String[] args) {
-        game = new Game("Soccer Game", 500, 500, 2, false);
-        game.addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer();
-        game.play();
+        game = (new Game("Soccer Game", 500, 500, 2, false))
+            .addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer()
+            .play()
+        ;
     }
 
     // convenience method for Java equivalent of JavaScript's `setTimeout` function
