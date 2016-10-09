@@ -6,6 +6,8 @@ import java.awt.Stroke;
 import java.awt.Graphics;
 import javax.swing.Timer;
 import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.BasicStroke;
@@ -35,6 +37,15 @@ public class Game extends JComponent {
     private boolean light;
     private ArrayList<Player> players;
     private Ball b;
+    
+    private JButton playButton;
+    private JButton pauseButton;
+    private JButton addPlayerButton;
+    private JButton clearFieldButton;
+    private JButton readFileButton;
+    private JButton saveFileButton;
+    private JLabel scoreLabel;
+    
     // customizable constructor
     public Game(String title, int w, int h, int sp, boolean l) {
         // initialize frame
@@ -53,6 +64,65 @@ public class Game extends JComponent {
         this.height = h;
         this.light = l;
         this.players = new ArrayList<Player>();
+        
+        // initialize buttons and ActionListeners
+        this.playButton = new JButton("Play");
+        class PlayButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                play();
+            }
+        }
+        this.playButton.addActionListener(new PlayButtonListener());
+        this.frame.add(this.playButton);
+        
+        this.pauseButton = new JButton("Pause");
+        class PauseButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                pause();
+            }
+        }
+        this.pauseButton.addActionListener(new PauseButtonListener());
+        this.frame.add(this.pauseButton);
+        
+        this.addPlayerButton = new JButton("Add Player");
+        class AddPlayerButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                addPlayer();
+            }
+        }
+        this.addPlayerButton.addActionListener(new AddPlayerButtonListener());
+        this.frame.add(this.addPlayerButton);
+        
+        this.clearFieldButton = new JButton("Clear Field");
+        class ClearFieldButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                clear();
+            }
+        }
+        this.clearFieldButton.addActionListener(new ClearFieldButtonListener());
+        this.frame.add(this.clearFieldButton);
+        
+        this.readFileButton = new JButton("Read File");
+        class ReadFileButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                readFile();
+            }
+        }
+        this.readFileButton.addActionListener(new ReadFileButtonListener());
+        this.frame.add(this.readFileButton);
+        
+        this.saveFileButton = new JButton("Save File");
+        class SaveFileButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                saveFile();
+            }
+        }
+        this.saveFileButton.addActionListener(new SaveFileButtonListener());
+        this.frame.add(this.saveFileButton);
+        
+        // initialize score label
+        this.scoreLabel = new JLabel("Score: " + score);
+        this.frame.add(this.scoreLabel);
 
         // add ball with timer to frame
         b = (new Ball(250, 250)).randVector();
@@ -62,7 +132,6 @@ public class Game extends JComponent {
                     if (sg.play) {
                         // move and repaint ball component
                         b.move().repaint();
-
                         // check collisions
                         Rectangle ballCollider = b.getCollider();
                         // check for player collisions in loop
@@ -86,6 +155,7 @@ public class Game extends JComponent {
                         // check for goal collision
                         if (sg.getGoalCollider().intersects(ballCollider)) {
                             sg.score++;
+                            scoreLabel.setText("Score: " + score);
                             System.out.println("P" + (sg.lastPlayer + 1) + ": SCORE!");
                             sg.pause();
                             WorldCup.setTimeout(1000, new Runnable() {
