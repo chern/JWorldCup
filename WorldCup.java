@@ -8,10 +8,11 @@ import java.awt.event.ActionListener;
 public class WorldCup {
     public static Game game;
     // main method creates and interacts with an instance of class SoccerGame
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
         game = (new Game("Soccer Game", 500, 500, 2, false))
             .addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer()
             .play()
+            
         ;
     }
 

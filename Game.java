@@ -152,9 +152,6 @@ public class Game extends JComponent {
         }
     }
 
-    public void addBall() {
-        /*Anuv here implement a function that adds the ball*/
-    }
     // (chainable) mutator method for adding new players to the game
     public Game addPlayer() {
         // remove background
@@ -262,8 +259,7 @@ public class Game extends JComponent {
     }
 
     public void readFile() {
-        // you have access to this.ball so feel free to set or get its position/vector
-        this.ball = this.ball;
+        
     }
 
     public void saveFile() throws IOException {
@@ -274,8 +270,9 @@ public class Game extends JComponent {
             int[] vectors = p.getVector();
             writer.append("\"Player\"," +"\"" + positions[0] +"\"," +"\"" + positions[1] + "\"," + "\"" + vectors[0] +"\","  +"\"" + vectors[1] +"\"\n");
         }
+        int[] ballVectors = this.ball.getVector();
         writer.append("\"Score\"," + "\"" + this.score + "\"\n");
-        writer.append("\"Ball\"," + "\"");
+        writer.append("\"Ball\"," + "\"" + ballVectors[0] +"\"," +"\"" + ballVectors[1] + "\"");
         writer.close();
     }
 }
