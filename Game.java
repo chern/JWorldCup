@@ -1,4 +1,6 @@
 // import classes
+import java.util.ArrayList;
+// import graphics/window classes
 import java.awt.Color;
 import java.awt.Stroke;
 import java.awt.Graphics;
@@ -6,16 +8,17 @@ import javax.swing.Timer;
 import javax.swing.JFrame;
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 import java.awt.BasicStroke;
 import javax.swing.JComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.IOException;
+// import filesystem classes
 import com.opencsv.*;
+import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.FileNotFoundException;
+
 // class Game contains the main game logic, but is also the JComponent for drawing a field
 public class Game extends JComponent {
     // instance fields
@@ -31,7 +34,7 @@ public class Game extends JComponent {
     public final Color lightGreen = new Color(40, 190, 40);
     private boolean light;
     private ArrayList<Player> players;
-    Ball b;
+    private Ball b;
     // customizable constructor
     public Game(String title, int w, int h, int sp, boolean l) {
         // initialize frame
@@ -52,7 +55,6 @@ public class Game extends JComponent {
         this.players = new ArrayList<Player>();
 
         // add ball with timer to frame
-        readFile();
         b = (new Ball(250, 250)).randVector();
         final Timer t = new Timer(sg.speed, null);
         t.addActionListener(new ActionListener() {
@@ -69,11 +71,11 @@ public class Game extends JComponent {
                             if (p.getCollider().intersects(ballCollider)) {
                                 int[] playerVector = p.getVector();
                                 // by random chance, do either one of the following
-                                if (Math.random() < 0.3) {
+                                if (Math.random() < 0.3) { // 30% chance
                                     // strike the ball
                                     System.out.println("P" + (i + 1) + ": strike");
                                     b.setVector(new int[] {(int) (playerVector[0] + 1), (int) (playerVector[1] + 1)});
-                                } else {
+                                } else { // 70% chance
                                     // dribble the ball
                                     System.out.println("P" + (i + 1) + ": dribble");
                                     b.setVector(new int[] {(int) (playerVector[0] * 1.25), (int) (playerVector[1] * 1.25)});
@@ -101,12 +103,13 @@ public class Game extends JComponent {
                 }
             });
         t.start();
-        frame.add(b);
+        this.frame.add(b);
         this.ball = b;
 
         // add field to frame
-        frame.add(this);
-        frame.setVisible(true);
+        this.frame.add(this);
+        // show frame
+        this.frame.setVisible(true);
     }
 
     // overridden paintComponent method for JComponent (for field and goal)
@@ -156,18 +159,23 @@ public class Game extends JComponent {
 
     // (chainable) mutator method for adding new players to the game
     public Game addPlayer() {
+        // randomize position and vector
+        return this.addPlayer((int) (Math.random() * 480 + 10), (int) (Math.random() * 480 + 10), null, null);
+    }
+    public Game addPlayer(int xPos, int yPos, Integer xVec, Integer yVec) {
         // remove background
         Game sg = this;
         this.frame.remove(this);
 
         // add player to frame at random position
-        Player p = new Player((int) (Math.random() * 480 + 10), (int) (Math.random() * 480 + 10));
+        Player p = new Player(xPos, yPos);
         this.frame.add(p);
-        players.add(p);
+        this.players.add(p);
         this.frame.setVisible(true);
 
-        // change player direction/speed randomly
-        p.randVector();
+        // change player direction/speed
+        if (xVec == null || yVec == null) p.randVector();
+        else p.setVector(new int[] { xVec, yVec });
 
         // add timer for moving player
         Timer t1 = new Timer(sg.speed, null);
@@ -242,7 +250,8 @@ public class Game extends JComponent {
     public Game clear() {
         this.pause();
         for (Player p : this.players) {
-            for (Timer t : p.getTimers()) t.stop();
+            for (Timer t : p.getTimers())
+                t.stop();
             p.setTimers(null, null);
             this.frame.remove(p);
         }
@@ -261,32 +270,39 @@ public class Game extends JComponent {
     }
 
     public void readFile() {
-        clear();
+        this.pause();
+        this.clear();
         try {
             CSVReader reader = new CSVReader(new FileReader("playerData.csv"));
             String[] nextLine;
             while((nextLine = reader.readNext()) != null) {
-                
+                // ADD players with addPlayer and position/vector
+                // SET Ball position and vector
+                // SET game score
             }
-        }
-        catch(FileNotFoundException fe) {
-            System.out.println("File not found!");
+        } catch(FileNotFoundException fnfe) {
+            System.out.println("File could not be read - File not found: " + fnfe.getMessage());
         } catch(IOException ioe) {
-            System.out.println("IO Exception caught!");
+            System.out.println("File could not be read - IO Exception: " + ioe.getMessage());
         }
     }
 
-    public void saveFile() throws IOException {
-        FileWriter writer = new FileWriter("playerData.csv");
-        writer.write("");
-        for (Player p : this.players) {
-            int[] positions = p.getPosition();
-            int[] vectors = p.getVector();
-            writer.append("\"Player\"," +"\"" + positions[0] +"\"," +"\"" + positions[1] + "\"," + "\"" + vectors[0] +"\","  +"\"" + vectors[1] +"\"\n");
+    public void saveFile() {
+        FileWriter writer;
+        try {
+            writer = new FileWriter("playerData.csv");
+            writer.write("");
+            for (Player p : this.players) {
+                int[] positions = p.getPosition();
+                int[] vectors = p.getVector();
+                writer.append("\"Player\"," +"\"" + positions[0] +"\"," +"\"" + positions[1] + "\"," + "\"" + vectors[0] +"\","  +"\"" + vectors[1] +"\"\n");
+            }
+            int[] ballVector = this.ball.getVector();
+            writer.append("\"Score\"," + "\"" + this.score + "\"\n");
+            writer.append("\"Ball\"," + "\"" + ballVector[0] +"\"," +"\"" + ballVector[1] + "\"");
+            writer.close();
+        } catch (IOException ioe) {
+            System.out.println("File could not be saved - IO Exception: " + ioe.getMessage());
         }
-        int[] ballVectors = this.ball.getVector();
-        writer.append("\"Score\"," + "\"" + this.score + "\"\n");
-        writer.append("\"Ball\"," + "\"" + ballVectors[0] +"\"," +"\"" + ballVectors[1] + "\"");
-        writer.close();
     }
 }
