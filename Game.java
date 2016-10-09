@@ -13,7 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import com.opencsv.*;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
 // class Game contains the main game logic, but is also the JComponent for drawing a field
 public class Game extends JComponent {
     // instance fields
@@ -191,7 +193,7 @@ public class Game extends JComponent {
                     if (sg.play) {
                         // generate new direction/speed for player
                         p.randVector();
-                        
+
                         int[] ballPos = sg.ball.getPosition();
                         int[] playerPos = p.getPosition();
                         int[] playerVec = p.getVector();
@@ -206,7 +208,7 @@ public class Game extends JComponent {
 
         // keep track of timers
         p.setTimers(t1, t2);
-        
+
         // re-add background
         this.frame.add(this);
         this.frame.setVisible(true);
@@ -235,7 +237,7 @@ public class Game extends JComponent {
         // chain
         return this;
     }
-    
+
     // (chainable) mutator method for clearing players from field
     public Game clear() {
         this.pause();
@@ -259,7 +261,19 @@ public class Game extends JComponent {
     }
 
     public void readFile() {
-        
+        clear();
+        try {
+            CSVReader reader = new CSVReader(new FileReader("playerData.csv"));
+            String[] nextLine;
+            while((nextLine = reader.readNext()) != null) {
+                
+            }
+        }
+        catch(FileNotFoundException fe) {
+            System.out.println("File not found!");
+        } catch(IOException ioe) {
+            System.out.println("IO Exception caught!");
+        }
     }
 
     public void saveFile() throws IOException {
