@@ -1,13 +1,11 @@
 // import classes
 import java.util.ArrayList;
 // import graphics/window classes
-import java.awt.Font;
 import java.awt.Color;
 import java.awt.Stroke;
 import java.awt.Graphics;
 import javax.swing.Timer;
 import javax.swing.JFrame;
-import javax.swing.JSlider;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Rectangle;
@@ -16,8 +14,6 @@ import java.awt.BasicStroke;
 import javax.swing.JComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 // import filesystem classes
 import com.opencsv.*;
 import java.io.FileWriter;
@@ -41,22 +37,20 @@ public class Game extends JComponent {
     private boolean light;
     private ArrayList<Player> players;
     private Ball b;
-    // UI controls
-    private JLabel scoreLabel;
+    
     private JButton playButton;
     private JButton pauseButton;
     private JButton addPlayerButton;
     private JButton clearFieldButton;
     private JButton readFileButton;
     private JButton saveFileButton;
-    private JSlider speedSlider;
+    private JLabel scoreLabel;
     
     // customizable constructor
     public Game(String title, int w, int h, int sp, boolean l) {
         // initialize frame
         Game sg = this;
         this.frame = new JFrame(title);
-        this.frame.setLayout(null);
         this.frame.setSize(w, h + 20);
         this.frame.setBackground(this.darkGreen);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,6 +64,65 @@ public class Game extends JComponent {
         this.height = h;
         this.light = l;
         this.players = new ArrayList<Player>();
+        
+        // initialize buttons and ActionListeners
+        this.playButton = new JButton("Play");
+        class PlayButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                play();
+            }
+        }
+        this.playButton.addActionListener(new PlayButtonListener());
+        this.frame.add(this.playButton);
+        
+        this.pauseButton = new JButton("Pause");
+        class PauseButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                pause();
+            }
+        }
+        this.pauseButton.addActionListener(new PauseButtonListener());
+        this.frame.add(this.pauseButton);
+        
+        this.addPlayerButton = new JButton("Add Player");
+        class AddPlayerButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                addPlayer();
+            }
+        }
+        this.addPlayerButton.addActionListener(new AddPlayerButtonListener());
+        this.frame.add(this.addPlayerButton);
+        
+        this.clearFieldButton = new JButton("Clear Field");
+        class ClearFieldButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                clear();
+            }
+        }
+        this.clearFieldButton.addActionListener(new ClearFieldButtonListener());
+        this.frame.add(this.clearFieldButton);
+        
+        this.readFileButton = new JButton("Read File");
+        class ReadFileButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                readFile();
+            }
+        }
+        this.readFileButton.addActionListener(new ReadFileButtonListener());
+        this.frame.add(this.readFileButton);
+        
+        this.saveFileButton = new JButton("Save File");
+        class SaveFileButtonListener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                saveFile();
+            }
+        }
+        this.saveFileButton.addActionListener(new SaveFileButtonListener());
+        this.frame.add(this.saveFileButton);
+        
+        // initialize score label
+        this.scoreLabel = new JLabel("Score: " + score);
+        this.frame.add(this.scoreLabel);
 
         // add ball with timer to frame
         b = (new Ball(250, 250)).randVector();
@@ -102,13 +155,13 @@ public class Game extends JComponent {
                         // check for goal collision
                         if (sg.getGoalCollider().intersects(ballCollider)) {
                             sg.score++;
-                            sg.scoreLabel.setText("Score: " + score);
+                            scoreLabel.setText("Score: " + score);
                             System.out.println("P" + (sg.lastPlayer + 1) + ": SCORE!");
                             sg.pause();
-                            WorldCup.setTimeout(500, new Runnable() {
+                            WorldCup.setTimeout(1000, new Runnable() {
                                     public void run() {
                                         sg.play();
-                                        b.setPosition(new int[] { w/2, h/2 }).randVector();
+                                        b.setPosition(new int[] {250, 250}).randVector();
                                     }
                                 });
                         }
@@ -122,95 +175,9 @@ public class Game extends JComponent {
         t.start();
         this.frame.add(b);
         this.ball = b;
-        
-        // initialize score label (and add to frame)
-        this.scoreLabel = new JLabel("Score: " + score);
-        this.scoreLabel.setFont(new Font("Helvetica Bold", Font.PLAIN, 20));
-        this.scoreLabel.setSize(100, 30);
-        this.scoreLabel.setLocation(15, 10);
-        this.frame.add(this.scoreLabel);
-        
-        // initialize buttons and ActionListeners (and add to frame)
-        this.playButton = new JButton("Play");
-        this.playButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sg.play();
-            }
-        });
-        this.playButton.setSize(60, 25);
-        this.playButton.setLocation(110, 4);
-        this.frame.add(this.playButton);
-        
-        this.pauseButton = new JButton("Pause");
-        this.pauseButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sg.pause();
-            }
-        });
-        this.pauseButton.setSize(60, 25);
-        this.pauseButton.setLocation(110, 26);
-        this.frame.add(this.pauseButton);
-        
-        this.addPlayerButton = new JButton("Add Player");
-        this.addPlayerButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sg.addPlayer();
-            }
-        });
-        this.addPlayerButton.setSize(100, 25);
-        this.addPlayerButton.setLocation(162, 4);
-        this.frame.add(this.addPlayerButton);
-        
-        this.clearFieldButton = new JButton("Clear Field");
-        this.clearFieldButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sg.clear();
-            }
-        });
-        this.clearFieldButton.setSize(100, 25);
-        this.clearFieldButton.setLocation(162, 26);
-        this.frame.add(this.clearFieldButton);
-        
-        this.readFileButton = new JButton("Read File");
-        this.readFileButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sg.readFile();
-            }
-        });
-        this.readFileButton.setSize(100, 25);
-        this.readFileButton.setLocation(254, 4);
-        this.frame.add(this.readFileButton);
-        
-        this.saveFileButton = new JButton("Save File");
-        this.saveFileButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sg.saveFile();
-            }
-        });
-        this.saveFileButton.setSize(100, 25);
-        this.saveFileButton.setLocation(254, 26);
-        this.frame.add(this.saveFileButton);
 
-        // initialize and add speed slider
-        JLabel speedLabel = new JLabel("Speed: ");
-        speedLabel.setFont(new Font("Helvetica Bold", Font.PLAIN, 14));
-        speedLabel.setSize(100, 30);
-        speedLabel.setLocation(355, 10);
-        this.frame.add(speedLabel);
-        this.speedSlider = new JSlider(1, 100, this.speed);
-        this.speedSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                sg.setSpeed(sg.speedSlider.getValue());
-            }
-        });
-        this.speedSlider.setSize(100, 30);
-        this.speedSlider.setLocation(400, 10);
-        this.frame.add(this.speedSlider);
-        
         // add field to frame
-        this.setBounds(0, 0, w, h);
         this.frame.add(this);
-        
         // show frame
         this.frame.setVisible(true);
     }
@@ -265,7 +232,7 @@ public class Game extends JComponent {
         // randomize position and vector
         return this.addPlayer((int) (Math.random() * 480 + 10), (int) (Math.random() * 480 + 10), null, null);
     }
-    public Game addPlayer(Integer xPos, Integer yPos, Integer xVec, Integer yVec) {
+    public Game addPlayer(int xPos, int yPos, Integer xVec, Integer yVec) {
         // remove background
         Game sg = this;
         this.frame.remove(this);
@@ -345,7 +312,6 @@ public class Game extends JComponent {
     // (chainable) mutator method for game speed instance field
     public Game setSpeed(int s) {
         this.speed = s;
-        this.speedSlider.setValue(s);
         // chain
         return this;
     }
@@ -360,7 +326,6 @@ public class Game extends JComponent {
             this.frame.remove(p);
         }
         this.players.clear();
-        this.play();
         // chain
         return this;
     }
@@ -381,10 +346,15 @@ public class Game extends JComponent {
             CSVReader reader = new CSVReader(new FileReader("playerData.csv"));
             String[] nextLine;
             while((nextLine = reader.readNext()) != null) {
-                // ADD players with this.addPlayer and position/vector
-                // SET ball position and vector with this.ball
-                // SET game score with this.score
-                // SET game speed with this.setSpeed()
+                if(nextLine[0].equals("Player")) {
+                    this.addPlayer(Integer.parseInt(nextLine[1]), Integer.parseInt(nextLine[2]), Integer.parseInt(nextLine[3]), Integer.parseInt(nextLine[4]));
+                }
+                if(nextLine[0].equals("Score")) {
+                    score = Integer.parseInt(nextLine[1]);
+                }
+                // ADD players with addPlayer and position/vector
+                // SET Ball position and vector
+                // SET game score
             }
         } catch(FileNotFoundException fnfe) {
             System.out.println("File could not be read - File not found: " + fnfe.getMessage());
@@ -398,16 +368,14 @@ public class Game extends JComponent {
         try {
             writer = new FileWriter("playerData.csv");
             writer.write("");
-            int[] ballPosition = this.ball.getPosition();
-            int[] ballVector = this.ball.getVector();
-            writer.append("\"Score\"," + "\"" + this.score + "\"\n");
-            writer.append("\"Speed\"," + "\"" + this.speed + "\"\n");
-            writer.append("\"Ball\"," + "\"" + ballPosition[0] + "\"," + "\"" + ballPosition[1] + "\"," + "\"" + ballVector[0] +"\"," + "\"" + ballVector[1] + "\"\n");
             for (Player p : this.players) {
                 int[] positions = p.getPosition();
                 int[] vectors = p.getVector();
                 writer.append("\"Player\"," +"\"" + positions[0] +"\"," +"\"" + positions[1] + "\"," + "\"" + vectors[0] +"\","  +"\"" + vectors[1] +"\"\n");
             }
+            int[] ballVector = this.ball.getVector();
+            writer.append("\"Score\"," + "\"" + this.score + "\"\n");
+            writer.append("\"Ball\"," + "\"" + ballVector[0] +"\"," +"\"" + ballVector[1] + "\"");
             writer.close();
         } catch (IOException ioe) {
             System.out.println("File could not be saved - IO Exception: " + ioe.getMessage());
