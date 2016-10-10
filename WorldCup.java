@@ -6,10 +6,9 @@ import java.awt.event.ActionListener;
 
 // class Engine contains main method to be run
 public class WorldCup {
-    public static Game game;
     // main method creates and interacts with an instance of class SoccerGame
     public static void main(String[] args) {
-        game = (new Game("Soccer Game", 500, 500, 2, false))
+        Game game = (new Game("Soccer Game", 500, 500, 2, false))
             .addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer().addPlayer()
             .play()
         ;
@@ -20,8 +19,8 @@ public class WorldCup {
         final Timer t = new Timer(msDelay, null);
         t.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    r.run();
                     t.stop();
+                    r.run();
                 }
             });
         t.start();

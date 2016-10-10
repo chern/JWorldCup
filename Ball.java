@@ -87,9 +87,9 @@ public class Ball extends JComponent {
         if (this.yPos >= 460) {
             this.yVec *= -1;
             this.yPos = 459;
-        } else if (this.yPos <= 0) {
+        } else if (this.yPos <= 45) {
             this.yVec *= -1;
-            this.yPos = 1;
+            this.yPos = 46;
         }
         
         // move coordinates by vector

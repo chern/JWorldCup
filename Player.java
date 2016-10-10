@@ -71,8 +71,8 @@ public class Player extends JComponent {
     // (chainable) mutator for method for generating new random direction and speed
     public Player randVector() {
         // generate new random vector magnitudes
-        this.xVec = (int) (Math.random() * 6 - 3);
-        this.yVec = (int) (Math.random() * 6 - 3);
+        this.xVec = (int) (Math.random() * 7 - 3);
+        this.yVec = (int) (Math.random() * 7 - 3);
         // chain
         return this;
     }
@@ -114,9 +114,9 @@ public class Player extends JComponent {
         if (this.yPos >= 460) {
             this.yVec *= -1;
             this.yPos = 459;
-        } else if (this.yPos <= 0) {
+        } else if (this.yPos <= 45) {
             this.yVec *= -1;
-            this.yPos = 1;
+            this.yPos = 46;
         }
 
         // move coordinates by vector
