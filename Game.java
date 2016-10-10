@@ -349,9 +349,10 @@ public class Game extends JComponent {
                 if(nextLine[0].equals("Player")) {
                     this.addPlayer(Integer.parseInt(nextLine[1]), Integer.parseInt(nextLine[2]), Integer.parseInt(nextLine[3]), Integer.parseInt(nextLine[4]));
                 }
-                if(nextLine[0].equals("Score")) {
+                else if(nextLine[0].equals("Score")) {
                     score = Integer.parseInt(nextLine[1]);
                 }
+                else if(nextLine[0].equals("Ball")) {}
                 // ADD players with addPlayer and position/vector
                 // SET Ball position and vector
                 // SET game score
