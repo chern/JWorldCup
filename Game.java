@@ -371,9 +371,23 @@ public class Game extends JComponent {
         this.pause();
         this.clear();
         try {
-            CSVReader reader = new CSVReader(new FileReader("playerData.csv"));
+            CSVReader reader = new CSVReader(new FileReader("playerData.csv"), ',', '"');
             String[] nextLine;
             while((nextLine = reader.readNext()) != null) {
+                 if(nextLine[0].equals("Player")) {
+                    this.addPlayer(Integer.parseInt(nextLine[1]), Integer.parseInt(nextLine[2]), Integer.parseInt(nextLine[3]), Integer.parseInt(nextLine[4]));
+                }
+                else if(nextLine[0].equals("Score")) {
+                    this.score = Integer.parseInt(nextLine[1]);
+                } 
+                else if(nextLine[0].equals("Ball")) {
+                    this.ball.setVector(new int[]{Integer.parseInt(nextLine[3]), Integer.parseInt(nextLine[4])});
+                    this.ball.setPosition(new int[]{Integer.parseInt(nextLine[1]), Integer.parseInt(nextLine[2])});
+                } 
+                else if(nextLine[0].equals("Speed")) {
+                    this.speed = Integer.parseInt(nextLine[1]);        
+                    this.speedSlider.setValue(Integer.parseInt(nextLine[1]));
+                }
                 // ADD players with this.addPlayer and position/vector
                 // SET ball position and vector with this.ball
                 // SET game score with this.score
