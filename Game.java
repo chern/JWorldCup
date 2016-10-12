@@ -31,6 +31,7 @@ public class Game extends JComponent {
     private int score;
     private int speed;
     private boolean play;
+    private String filepath;
     private Ball ball;
     private int lastPlayer;
     private JFrame frame;
@@ -52,7 +53,7 @@ public class Game extends JComponent {
     private JSlider speedSlider;
     
     // customizable constructor
-    public Game(String title, int w, int h, int sp, boolean l) {
+    public Game(String title, int w, int h, int sp, boolean l, String fp) {
         // initialize frame
         Game sg = this;
         this.frame = new JFrame(title);
@@ -69,6 +70,7 @@ public class Game extends JComponent {
         this.width = w;
         this.height = h;
         this.light = l;
+        this.filepath = fp;
         this.players = new ArrayList<Player>();
 
         // add ball with timer to frame
@@ -127,7 +129,7 @@ public class Game extends JComponent {
         this.scoreLabel = new JLabel("Score: " + score);
         this.scoreLabel.setFont(new Font("Helvetica Bold", Font.PLAIN, 20));
         this.scoreLabel.setSize(100, 30);
-        this.scoreLabel.setLocation(15, 10);
+        this.scoreLabel.setLocation(13, 10);
         this.frame.add(this.scoreLabel);
         
         // initialize buttons and ActionListeners (and add to frame)
@@ -315,6 +317,9 @@ public class Game extends JComponent {
         this.frame.add(this);
         this.frame.setVisible(true);
 
+        // display new players
+        this.repaint();
+        
         // chain
         return this;
     }
@@ -345,15 +350,24 @@ public class Game extends JComponent {
 
     // (chainable) mutator method for clearing players from field
     public Game clear() {
-        this.pause();
+        // if playing, pause temporarily
+        boolean wasPlaying = this.play;
+        if (this.play) this.pause();
+        // loop through players
         for (Player p : this.players) {
+            // stop and remove player timers
             for (Timer t : p.getTimers())
                 t.stop();
             p.setTimers(null, null);
+            // remove player from frame
             this.frame.remove(p);
         }
+        // remove all players from memory
         this.players.clear();
-        this.play();
+        // if game was playing before, unpause
+        if (wasPlaying) this.play();
+        // clear players from screen
+        this.repaint();
         // chain
         return this;
     }
@@ -367,24 +381,25 @@ public class Game extends JComponent {
         return new Rectangle(goalX + 10, goalY + 10, goalWidth - 20, goalHeight - 10);
     }
 
+    // method for reading data file and loading data into game
     public void readFile() {
-        this.pause();
         this.clear();
         try {
-            CSVReader reader = new CSVReader(new FileReader("playerData.csv"), ',', '"');
+            CSVReader reader = new CSVReader(new FileReader(this.filepath), ',', '"');
             String[] nextLine;
             while((nextLine = reader.readNext()) != null) {
-                 if(nextLine[0].equals("Player")) {
+                if (nextLine[0].equals("Player")) {
+                     // parse player data and add players to game
                     this.addPlayer(Integer.parseInt(nextLine[1]), Integer.parseInt(nextLine[2]), Integer.parseInt(nextLine[3]), Integer.parseInt(nextLine[4]));
-                }
-                else if(nextLine[0].equals("Score")) {
+                } else if (nextLine[0].equals("Score")) {
+                    // parse and set game score
                     this.score = Integer.parseInt(nextLine[1]);
-                } 
-                else if(nextLine[0].equals("Ball")) {
-                    this.ball.setVector(new int[]{Integer.parseInt(nextLine[3]), Integer.parseInt(nextLine[4])});
-                    this.ball.setPosition(new int[]{Integer.parseInt(nextLine[1]), Integer.parseInt(nextLine[2])});
-                } 
-                else if(nextLine[0].equals("Speed")) {
+                } else if (nextLine[0].equals("Ball")) {
+                    // parse and set ball vector and position
+                    this.ball.setVector(new int[] { Integer.parseInt(nextLine[3]), Integer.parseInt(nextLine[4]) });
+                    this.ball.setPosition(new int[] { Integer.parseInt(nextLine[1]), Integer.parseInt(nextLine[2]) });
+                } else if (nextLine[0].equals("Speed")) {
+                    // parse and set game speed
                     this.speed = Integer.parseInt(nextLine[1]);        
                     this.speedSlider.setValue(Integer.parseInt(nextLine[1]));
                 }
@@ -393,17 +408,18 @@ public class Game extends JComponent {
                 // SET game score with this.score
                 // SET game speed with this.setSpeed()
             }
-        } catch(FileNotFoundException fnfe) {
+        } catch (FileNotFoundException fnfe) {
             System.out.println("File could not be read - File not found: " + fnfe.getMessage());
-        } catch(IOException ioe) {
+        } catch (IOException ioe) {
             System.out.println("File could not be read - IO Exception: " + ioe.getMessage());
         }
     }
 
+    // method for saving game data to CSV file
     public void saveFile() {
         FileWriter writer;
         try {
-            writer = new FileWriter("playerData.csv");
+            writer = new FileWriter(this.filepath);
             writer.write("");
             int[] ballPosition = this.ball.getPosition();
             int[] ballVector = this.ball.getVector();

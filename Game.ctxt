@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=title\ w\ h\ sp\ l
-comment0.target=Game(java.lang.String,\ int,\ int,\ int,\ boolean)
+comment0.params=title\ w\ h\ sp\ l\ fp
+comment0.target=Game(java.lang.String,\ int,\ int,\ int,\ boolean,\ java.lang.String)
 comment1.params=e
 comment1.target=void\ actionPerformed(java.awt.event.ActionEvent)
 comment10.params=
