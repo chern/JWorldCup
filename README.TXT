@@ -16,8 +16,18 @@ USER INSTRUCTIONS: WorldCup Details/Controls
                 - To SPEED up or slow down the animations, move the knob of the 'Speed' slider
                 - To SAVE the game's current state to `./savedData.csv` click on the 'Save File' button
                 - To LOAD the game's last saved state from `./savedData.csv`, click on the 'Read File' button
+                    - "Playing/paused" game state is not saved to allow for efficiently reading from the file
+                    - Player jersey/skin colors are not saved, and are randomly generated whenever player is added or loaded
+                    - Saved data includes:
+                        - All players' positions, and directions/speeds (vectors)
+                        - Ball position and direction/speed (vector)
+                        - Current game overall score (total goals scored during game run)
+                        - Current game animation speed (set by slider)
                 - NOTE: Due to the inadequacies of javax.swing, the timers that control animations slow drastically
                 - NOTE: It is recommended that the JVM is reset after terminating the program due to, once again,
                         the inadequacies of javax.swing, whose timers may run indefinitely for no reason
                 
-Screenshot of trial run: `./screenshot.png`
+Screenshots of trial run:
+    - JFrame Window: `./window.png`
+    - BlueJ Terminal: `./terminal.png`
+    - savedData.csv: `./data.png`
