@@ -403,10 +403,6 @@ public class Game extends JComponent {
                     this.speed = Integer.parseInt(nextLine[1]);        
                     this.speedSlider.setValue(Integer.parseInt(nextLine[1]));
                 }
-                // ADD players with this.addPlayer and position/vector
-                // SET ball position and vector with this.ball
-                // SET game score with this.score
-                // SET game speed with this.setSpeed()
             }
         } catch (FileNotFoundException fnfe) {
             System.out.println("File could not be read - File not found: " + fnfe.getMessage());
