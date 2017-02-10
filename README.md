@@ -1,6 +1,5 @@
-# JWorldCup — Anuv Nishan William
+# JWorldCup
 - APCS Project
-- See `README.txt` for details
 
 ## Purpose
 To change and control the state of 10 or more obejcts randomly and save as well as load their variable data to/from a CSV file
@@ -37,3 +36,8 @@ Run the `main()` method in the WorldCup class
  - Current game animation speed (set by slider)
 - NOTE: Due to the inadequacies of javax.swing, the timers that control animations slow drastically
 - NOTE: It is recommended that the JVM is reset after terminating the program due to, once again, the inadequacies of `javax.swing`, whose timers may run indefinitely for no reason
+
+## Screenshots of a sample run
+![Window](./window.png)
+![Terminal](./terminal.png)
+![savedData.csv](./data.png)
